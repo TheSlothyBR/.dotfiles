@@ -1,9 +1,9 @@
 # exclude everything
-*
+#*
 
 # exceptions
-!.gitignore
+#!.gitignore
 
 # track these files
-!nix-config/
-!.config/
+#!nix-config/
+#!.config/
