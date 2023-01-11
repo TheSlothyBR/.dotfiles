@@ -1,3 +1,3 @@
 #!usr/bin/env sh
 
-echo "Im a test!"
+echo "I changed!"
