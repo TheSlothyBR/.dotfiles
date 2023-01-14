@@ -1,3 +1,6 @@
 .direnv
 result*
 *.qcow2
+shell.nix
+git.sh
+.replit

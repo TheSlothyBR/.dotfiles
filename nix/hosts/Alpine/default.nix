@@ -35,6 +35,11 @@
 
   nixpkgs.config.allowUnfree = true;
 
+  # also source direnv
+  environment.systemPackages = with pkgs; [
+    direnv
+  ]
+
   home-manager = {
     useUserPackages = true;
     extraSpecialArgs = { inherit inputs outputs; };

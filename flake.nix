@@ -17,32 +17,31 @@
   };
 
   inputs = {
-	# Upstream nixpkgs
-	nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+	  # Upstream nixpkgs
+	  nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+  
+	  # Upstream hardware optimizations
+	  hardware.url = "github:nixos/nixos-hardware";
+  
+    # Upstream impermanence
+	  impermanence.url = "github:nix-community/impermanence";
+  
+    # Upstream sops
+    sops-nix.url = "github:mic92/sops-nix";
+  
+	  # Upstream home manager
+	  home-manager = {
+	    url = "github:nix-community/home-manager";
+	    inputs.nixpkgs.follows = "nixpkgs"; # versioning of home-manager pkgs follows nix pkgs
+	  };
 
-	# Upstream hardware optimizations
-	hardware.url = "github:nixos/nixos-hardware";
+	  # Upstream user repository & utils
+	  #nur.url = "github:nix-community/NUR";
+	  flake-utils.url = "github:numtide/flake-utils";
 
-  # Upstream impermanence
-	impermanence.url = "github:nix-community/impermanence";
-
-  # Upstream sops
-  sops-nix.url = "github:mic92/sops-nix";
-
-	# Upstream home manager
-	home-manager = {
-	  url = "github:nix-community/home-manager";
-	  inputs.nixpkgs.follows = "nixpkgs"; # versioning of home-manager pkgs follows nix pkgs
-	};
-
-	# Upstream user repository & utils
-	#nur.url = "github:nix-community/NUR";
-	flake-utils.url = "github:numtide/flake-utils";
-
-	# Upstream dev env tools
-	cachix.url = "github:cachix/cachix";
-	devenv.url = "github:cachix/devenv";
-	# also source direnv from home-manager: https://github.com/nix-community/nix-direnv/tree/master/templates/flake
+	  # Upstream dev env tools
+	  cachix.url = "github:cachix/cachix";
+	  devenv.url = "github:cachix/devenv";
   };
 
   outputs = { nixpkgs, home-manager, ...}@inputs: 
@@ -52,54 +51,54 @@
 	  forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
   in
   rec {
-	# Nix configuration entrypoint
+	  # Nix configuration entrypoint
 
-  templates = import ./nix/templates;
-  mylib = import ./nix/lib;
-	myoverlays = forAllSystems (system:
-	  import ./nix/mypkgs/overlays { pkgs = nixpkgs.legacyPackages.${system}; }
-	);
-	mypkgs = forAllSystems (system:
-	  import ./nix/mypkgs/pkgs { pkgs = nixpkgs.legacyPackages.${system}; }
-	);
+    templates = import ./nix/templates;
+    mylib = import ./nix/lib;
+	  myoverlays = forAllSystems (system:
+	    import ./nix/mypkgs/overlays { pkgs = nixpkgs.legacyPackages.${system}; }
+	  );
+	  mypkgs = forAllSystems (system:
+	    import ./nix/mypkgs/pkgs { pkgs = nixpkgs.legacyPackages.${system}; }
+	  );
 
-  # NixOS confi is a module: https://nixos.org/manual/nixos/stable/index.html#sec-importing-modules
-	nixosConfigurations = rec { # Hosts declaration. Poorly named, depends only on Nix, not NixOS
-	  Alpine = nixpkgs.lib.nixosSystem {
-	    special-args = { inherit inputs outputs }; # Pass flake in/outs to the system config
-		  modules = [ ./nix/hosts/Alpine ]; # Entrypoint for the system config
-	  };
-	  Fedora = nixpkgs.lib.nixosSystem {
-	    special-args = { inherit inputs outputs };
-		  modules = [ ./nix/hosts/Fedora ];
-	  };
-	  NixOS = nixpkgs.lib.nixosSystem {
-	    special-args = { inherit inputs outputs };
-		  modules = [ ./nix/hosts/NixOS ];
-	  };
-	  PostmarketOS = nixpkgs.lib.nixosSystem {
-	    special-args = { inherit inputs outputs };
-		  modules = [ ./nix/hosts/PostmarketOS ];
-	  };
-	};
+    # NixOS confi is a module: https://nixos.org/manual/nixos/stable/index.html#sec-importing-modules
+	  nixosConfigurations = rec { # Hosts declaration. Poorly named, depends only on Nix, not NixOS
+  	  Alpine = nixpkgs.lib.nixosSystem {
+  	    special-args = { inherit inputs outputs }; # Pass flake in/outs to the system config
+  		  modules = [ ./nix/hosts/Alpine ]; # Entrypoint for the system config
+  	  };
+  	  Fedora = nixpkgs.lib.nixosSystem {
+  	    special-args = { inherit inputs outputs };
+  		  modules = [ ./nix/hosts/Fedora ];
+  	  };
+  	  NixOS = nixpkgs.lib.nixosSystem {
+  	    special-args = { inherit inputs outputs };
+  		  modules = [ ./nix/hosts/NixOS ];
+  	  };
+  	  PostmarketOS = nixpkgs.lib.nixosSystem {
+  	    special-args = { inherit inputs outputs };
+  		  modules = [ ./nix/hosts/PostmarketOS ];
+  	  };
+  	};
 
-  homeConfigurations = { # declarations for users configs
-	  "theslothybr@Alpine" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages."x86_64-linux"; # a misnomer: legacyPackages simply accomodates flakes and non-flakes pkgs into one glob
-        extraSpecialArgs = { inherit inputs outputs; };
-        modules = [ ./hosts/Alpine/home/theslothybr ];
-      };
-	  # Desktop
-    "theslothybr@NixOS" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages."x86_64-linux";
-        extraSpecialArgs = { inherit inputs outputs; };
-        modules = [ ./hosts/NixOS/home/theslothybr ];
-	  };
-	  # Phone
-    "theslothybr@PostmarketOS" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages."aarch64-linux";
-        extraSpecialArgs = { inherit inputs outputs; };
-        modules = [ ./hosts/PostmarketOS/home/theslothybr ];
+    homeConfigurations = { # declarations for users configs
+  	  "theslothybr@Alpine" = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages."x86_64-linux"; # a misnomer: legacyPackages simply accomodates flakes and non-flakes pkgs into one glob
+          extraSpecialArgs = { inherit inputs outputs; };
+          modules = [ ./hosts/Alpine/home/theslothybr ];
+        };
+  	  # Desktop
+      "theslothybr@NixOS" = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages."x86_64-linux";
+          extraSpecialArgs = { inherit inputs outputs; };
+          modules = [ ./hosts/NixOS/home/theslothybr ];
+  	  };
+  	  # Phone
+      "theslothybr@PostmarketOS" = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgs.legacyPackages."aarch64-linux";
+          extraSpecialArgs = { inherit inputs outputs; };
+          modules = [ ./hosts/PostmarketOS/home/theslothybr ];
       };
 	  };
   };

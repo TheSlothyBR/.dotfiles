@@ -31,7 +31,10 @@
   virtualisation.libvirtd = {
     enable = true;
   };
-  environment.systemPackages = with pkgs; [ virt-manager ];
+  environment.systemPackages = with pkgs; [ 
+    virt-manager
+    direnv
+  ];
 
   system.stateVersion = "22.11";
 }
