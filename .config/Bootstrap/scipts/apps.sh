@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+
+repos=(
+	"https://copr.fedorainfracloud.org/coprs/atim/nushell/repo/fedora-36/atim-nushell-fedora-36.repo"
+	"https://copr.fedorainfracloud.org/coprs/jstaf/onedriver/repo/fedora-36/jstaf-onedriver-fedora-36.repo"
+	#"oh-my-posh"
+)
+
+appimages=(
+	"https://github.com/patrikx3/onenote/releases/download/v2022.10.109/P3X-OneNote-2022.10.109.AppImage"
+	"https://www.pcloud.com/how-to-install-pcloud-drive-linux.html?download=electron-64"
+)
+
+rpms=(
+	#bottom
+	#conda
+	corectrl
+	distrobox
+	expect
+	gparted
+	imv
+	kitty
+	neofetch
+	neovim
+	nnn
+	#nushell
+	#openssh
+	openssl
+	pandoc
+	stacer
+	tldr
+	trash-cli
+	tree
+	virt-manager
+	virt-viewer
+	qemu
+	bridge-utils
+	libguestfs
+)
+
+flatpaks=(
+	com.gitlab.davem.ClamTk
+	com.github.KRTirtho.Spotube
+	com.github.marktext.marktext
+	com.github.tchx84.Flatseal
+	com.stremio.Stremio
+	com.usebottles.bottles
+	com.valvesoftware.Steam
+	com.valvesoftware.Steam.Utility.steamtinkerlaunch
+	fr.handbrake.ghb
+	io.github.prateekmedia.appimagepool
+	io.podman_desktop.PodmanDesktop
+	md.obsidian.Obsidian
+	net.davidotek.pupgui2
+	net.cozic.joplin_desktop
+	net.lutris.Lutris
+	net.scribus.Scribus
+	org.blender.Blender
+	org.darktable.Darktable
+	org.gnome.Calculator
+	org.gnome.font-viewer
+	org.gnome.OCRFeeder
+	org.gimp.GIMP
+	org.inkscape.Inkscape
+	org.jamovi.jamovi
+	org.kde.ark
+	org.kde.kdenlive
+	org.kde.krita
+	org.kde.ktorrent
+	org.kde.kwrite
+	org.keepassxc.KeePassXC
+	org.ksnip.ksnip
+	org.musescore.MuseScore
+	org.onlyoffice.desktopeditors
+	org.videolan.VLC
+	org.zotero.Zotero
+)
+
+overwrites=(
+	firefox
+)
+
+uninstalls=(
+	org.fedoraproject.MediaWriter
+	org.gnome.Calendar
+	org.gnome.Characters
+	org.gnome.clocks
+	org.gnome.Connections
+	org.gnome.Contacts
+	org.gnome.baobab
+	org.gnome.Evince
+	org.gnome.Extensions
+	org.gnome.font-viewer
+	org.gnome.eog
+	org.gnome.Logs
+	org.gnome.Maps
+	org.gnome.Weather
+)
