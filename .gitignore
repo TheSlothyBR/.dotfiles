@@ -4,3 +4,4 @@ result*
 shell.nix
 git.sh
 .replit
+!.config
