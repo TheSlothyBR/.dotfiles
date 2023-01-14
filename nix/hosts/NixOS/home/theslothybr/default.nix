@@ -6,6 +6,7 @@
   };
 
   outputs = {
-    # text   
+    # text
+    users.users.alice.extraGroups = [ "networkmanager" ];
   };
 }
