@@ -1,11 +1,10 @@
-{ inputs, lib, pkgs, config, outputs, ... }:
+{ inputs, outputs, lib, pkgs, config, ... }:
 let
-  # TODO: check if good implementation
-  getUser = lib.lists.last (lib.strings.splitString "/" (builtins.unsafeGetAttrPos "x" { x = 1; }).file);
-in{
+  impermanence = inputs.impermanence.nixosModules.home-manager.impermanence;
+in {
   imports = [
-    inputs.impermanence.nixosModules.home-manager.impermanence
-    # TODO: figure out how to handle pkgs with settings in .config
+    impermanence
+    ./apps/neovim.nix
   ] ++ (builtins.attrValues outputs.homeManagerModules);
 
   nix = {
@@ -21,16 +20,20 @@ in{
   };
 
   home = {
-    username = lib.mkDefault "${getUser}";
-    homeDirectory = lib.mkDefault "/home/${getUser}";
+    username = lib.mkDefault ${myusers.alpine.u1.name};
+    homeDirectory = lib.mkDefault "/home/" + ${myusers.alpine.u1.name};
     stateVersion = lib.mkDefault "22.11";
 
     persistence = {
-      "/persist/home/${getUser}" = {
+      "/persist/home/" + ${myusers.alpine.u1.name} = {
         directories = [
+          "Desktop"
           "Documents"
           "Downloads"
+          "Music"
           "Pictures"
+          "Public"
+          "Templates"
           "Videos"
         ];
         allowOther = true;

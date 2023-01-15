@@ -1,7 +1,10 @@
 .direnv
 result*
 *.qcow2
+
+# deving
 shell.nix
+test.nix
 git.sh
 .replit
 !.config

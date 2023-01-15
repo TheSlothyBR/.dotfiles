@@ -3,7 +3,7 @@
 { outputs, ... }:{
  home-manager.programs.nushell = {
    enable = true;
-   configFile.source = "../../../.config/nushell/config.nu";
-   envFile.source = "../../../.config/nushell/env.nu";
+   configFile.source = ${myconfig} + "/nushell/config.nu";
+   envFile.source = ${myconfig} + "/nushell/env.nu";
  };
 }

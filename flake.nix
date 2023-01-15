@@ -52,15 +52,17 @@
   in
   rec {
 	  # Nix configuration entrypoint
-
     templates = import ./nix/templates;
+    myconfig = ./.config;
+    mycommon = ./nix/hosts/common;
+    myusers = {};#import ./nix/hosts/users/names.nix;
     mylib = import ./nix/lib;
-	  myoverlays = forAllSystems (system:
-	    import ./nix/mypkgs/overlays { pkgs = nixpkgs.legacyPackages.${system}; }
-	  );
-	  mypkgs = forAllSystems (system:
-	    import ./nix/mypkgs/pkgs { pkgs = nixpkgs.legacyPackages.${system}; }
-	  );
+    myoverlays = forAllSystems (system:
+      import ./nix/mypkgs/overlays { pkgs = nixpkgs.legacyPackages.${system}; }
+    );
+    mypkgs = forAllSystems (system:
+      import ./nix/mypkgs/pkgs { pkgs = nixpkgs.legacyPackages.${system}; }
+    );
 
     # NixOS confi is a module: https://nixos.org/manual/nixos/stable/index.html#sec-importing-modules
 	  nixosConfigurations = rec { # Hosts declaration. Poorly named, depends only on Nix, not NixOS
@@ -83,22 +85,22 @@
   	};
 
     homeConfigurations = { # declarations for users configs
-  	  "theslothybr@Alpine" = home-manager.lib.homeManagerConfiguration {
+  	  ${myusers.alpine.u1.name} + "@Alpine" = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages."x86_64-linux"; # a misnomer: legacyPackages simply accomodates flakes and non-flakes pkgs into one glob
           extraSpecialArgs = { inherit inputs outputs; };
-          modules = [ ./hosts/Alpine/home/theslothybr ];
+          modules = [ ${myusers.alpine.u1.path} ];
         };
   	  # Desktop
-      "theslothybr@NixOS" = home-manager.lib.homeManagerConfiguration {
+      ${myusers.nixos.u1.name} + "@NixOS" = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages."x86_64-linux";
           extraSpecialArgs = { inherit inputs outputs; };
-          modules = [ ./hosts/NixOS/home/theslothybr ];
+          modules = [ ${myusers.nixos.u1.path} ];
   	  };
   	  # Phone
-      "theslothybr@PostmarketOS" = home-manager.lib.homeManagerConfiguration {
+      ${myusers.postmarketos.u1.name} + "@PostmarketOS" = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages."aarch64-linux";
           extraSpecialArgs = { inherit inputs outputs; };
-          modules = [ ./hosts/PostmarketOS/home/theslothybr ];
+          modules = [ ${myusers.postmarketos.u1.path} ];
       };
 	  };
   };

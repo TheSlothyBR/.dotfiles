@@ -1,3 +1,5 @@
+# https://gist.github.com/Vincibean/baf1b76ca5147449a1a479b5fcc9a222
+# https://discourse.nixos.org/t/partitions-layout-advice-for-nixos-during-installation/13659/8
 # https://github.com/Misterio77/nix-config/blob/main/hosts/common/optional/btrfs-optin-persistence.nix
 # https://nixos.org/manual/nixos/stable/index.html#ch-file-systems
 # TODO: rewrite needed parts
