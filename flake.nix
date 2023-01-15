@@ -17,41 +17,41 @@
   };
 
   inputs = {
-	  # Upstream nixpkgs
-	  nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    # Upstream nixpkgs
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
   
-	  # Upstream hardware optimizations
-	  hardware.url = "github:nixos/nixos-hardware";
+    # Upstream hardware optimizations
+    hardware.url = "github:nixos/nixos-hardware";
   
     # Upstream impermanence
-	  impermanence.url = "github:nix-community/impermanence";
+    impermanence.url = "github:nix-community/impermanence";
   
     # Upstream sops
     sops-nix.url = "github:mic92/sops-nix";
   
-	  # Upstream home manager
-	  home-manager = {
-	    url = "github:nix-community/home-manager";
-	    inputs.nixpkgs.follows = "nixpkgs"; # versioning of home-manager pkgs follows nix pkgs
-	  };
+    # Upstream home manager
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs"; # versioning of home-manager pkgs follows nix pkgs
+    };
 
-	  # Upstream user repository & utils
-	  #nur.url = "github:nix-community/NUR";
-	  flake-utils.url = "github:numtide/flake-utils";
+    # Upstream user repository & utils
+    #nur.url = "github:nix-community/NUR";
+    flake-utils.url = "github:numtide/flake-utils";
 
-	  # Upstream dev env tools
-	  cachix.url = "github:cachix/cachix";
-	  devenv.url = "github:cachix/devenv";
+    # Upstream dev env tools
+    cachix.url = "github:cachix/cachix";
+    devenv.url = "github:cachix/devenv";
   };
 
   outputs = { nixpkgs, home-manager, ...}@inputs: 
   let
-	  inherit (self) inputs outputs;
-	  supportedSystems = [ "x86_64" "aarch64-linux" ];
-	  forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
+    inherit (self) inputs outputs;
+    supportedSystems = [ "x86_64" "aarch64-linux" ];
+    forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
   in
   rec {
-	  # Nix configuration entrypoint
+    # Nix configuration entrypoint
     templates = import ./nix/templates;
     myconfig = ./.config;
     mycommon = ./nix/hosts/common;
@@ -65,23 +65,23 @@
     );
 
     # NixOS confi is a module: https://nixos.org/manual/nixos/stable/index.html#sec-importing-modules
-	  nixosConfigurations = rec { # Hosts declaration. Poorly named, depends only on Nix, not NixOS
-  	  Alpine = nixpkgs.lib.nixosSystem {
-  	    special-args = { inherit inputs outputs }; # Pass flake in/outs to the system config
-  		  modules = [ ./nix/hosts/Alpine ]; # Entrypoint for the system config
-  	  };
-  	  Fedora = nixpkgs.lib.nixosSystem {
-  	    special-args = { inherit inputs outputs };
-  		  modules = [ ./nix/hosts/Fedora ];
-  	  };
-  	  NixOS = nixpkgs.lib.nixosSystem {
-  	    special-args = { inherit inputs outputs };
-  		  modules = [ ./nix/hosts/NixOS ];
-  	  };
-  	  PostmarketOS = nixpkgs.lib.nixosSystem {
-  	    special-args = { inherit inputs outputs };
-  		  modules = [ ./nix/hosts/PostmarketOS ];
-  	  };
+    nixosConfigurations = rec { # Hosts declaration. Poorly named, depends only on Nix, not NixOS
+      Alpine = nixpkgs.lib.nixosSystem {
+        special-args = { inherit inputs outputs }; # Pass flake in/outs to the system config
+        modules = [ ./nix/hosts/Alpine ]; # Entrypoint for the system config
+      };
+      Fedora = nixpkgs.lib.nixosSystem {
+        special-args = { inherit inputs outputs };
+        modules = [ ./nix/hosts/Fedora ];
+      };
+      NixOS = nixpkgs.lib.nixosSystem {
+        special-args = { inherit inputs outputs };
+        modules = [ ./nix/hosts/NixOS ];
+      };
+      PostmarketOS = nixpkgs.lib.nixosSystem {
+        special-args = { inherit inputs outputs };
+        modules = [ ./nix/hosts/PostmarketOS ];
+      };
   	};
 
     homeConfigurations = { # declarations for users configs
@@ -95,13 +95,13 @@
           pkgs = nixpkgs.legacyPackages."x86_64-linux";
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [ ${myusers.nixos.u1.path} ];
-  	  };
-  	  # Phone
+      };
+      # Phone
       ${myusers.postmarketos.u1.name} + "@PostmarketOS" = home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages."aarch64-linux";
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [ ${myusers.postmarketos.u1.path} ];
       };
-	  };
+    };
   };
 }
